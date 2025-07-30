@@ -1454,8 +1454,6 @@ class $3fffcf1c09fcf223$export$eb0022d780a83cd2 extends (0, $ab210b2da7b39b9d$ex
     render() {
         let content;
         content = (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
-			${this.config.icon ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<ha-icon icon="${this.config.icon}" />` : ""}
-			${this.config.name ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<span class="slide-name">${this.config.name}</span>` : ""}
 			${this.config.label ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<span class="slide-label">${this.config.label}</span>` : ""}
 			<div class="slide-confirm">
 				<div class="slide-confirm-track"></div>

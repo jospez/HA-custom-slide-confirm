@@ -21,8 +21,10 @@ export const slideConfirmStyles = css`
     bottom: 0;
     background-color: var(--slider-track-color);
     transition: background-color 500ms;
-    opacity: 0.38;
+    opacity: 1;
     border-radius: 30px;
+    height: 50px;
+    width: 370px;
   }
 
   .slide-confirm-text{
@@ -37,10 +39,10 @@ export const slideConfirmStyles = css`
   }
   .slide-confirm-handle{
     position:relative;
-    top:0;
-    left:0;
-    width:50px;
-    height:50px;
+    top:6px;
+    left:6px;
+    width:38px;
+    height:38px;
     border-radius:25px;
     border: 1px solid var(--switch-unchecked-button-color);
     background-color: var(--switch-unchecked-button-color);

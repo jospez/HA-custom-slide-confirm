@@ -11,7 +11,7 @@ INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
 LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */ /* global Reflect, Promise, SuppressedError, Symbol */ var $24c52f343453d62d$var$extendStatics = function(d, b) {
+***************************************************************************** */ /* global Reflect, Promise, SuppressedError, Symbol, Iterator */ var $24c52f343453d62d$var$extendStatics = function(d, b) {
     $24c52f343453d62d$var$extendStatics = Object.setPrototypeOf || ({
         __proto__: []
     }) instanceof Array && function(d, b) {
@@ -147,12 +147,8 @@ function $24c52f343453d62d$export$67ebef60e6f28a6(thisArg, body) {
         },
         trys: [],
         ops: []
-    }, f, y, t, g;
-    return g = {
-        next: verb(0),
-        "throw": verb(1),
-        "return": verb(2)
-    }, typeof Symbol === "function" && (g[Symbol.iterator] = function() {
+    }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() {
         return this;
     }), g;
     function verb(n) {
@@ -307,20 +303,28 @@ function $24c52f343453d62d$export$10c90e4f7922046c(v) {
 function $24c52f343453d62d$export$e427f37a30a4de9b(thisArg, _arguments, generator) {
     if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
     var g = generator.apply(thisArg, _arguments || []), i, q = [];
-    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function() {
+    return i = Object.create((typeof AsyncIterator === "function" ? AsyncIterator : Object).prototype), verb("next"), verb("throw"), verb("return", awaitReturn), i[Symbol.asyncIterator] = function() {
         return this;
     }, i;
-    function verb(n) {
-        if (g[n]) i[n] = function(v) {
-            return new Promise(function(a, b) {
-                q.push([
-                    n,
-                    v,
-                    a,
-                    b
-                ]) > 1 || resume(n, v);
-            });
+    function awaitReturn(f) {
+        return function(v) {
+            return Promise.resolve(v).then(f, reject);
         };
+    }
+    function verb(n, f) {
+        if (g[n]) {
+            i[n] = function(v) {
+                return new Promise(function(a, b) {
+                    q.push([
+                        n,
+                        v,
+                        a,
+                        b
+                    ]) > 1 || resume(n, v);
+                });
+            };
+            if (f) i[n] = f(i[n]);
+        }
     }
     function resume(n, v) {
         try {
@@ -395,11 +399,19 @@ var $24c52f343453d62d$var$__setModuleDefault = Object.create ? function(o, v) {
 } : function(o, v) {
     o["default"] = v;
 };
+var $24c52f343453d62d$var$ownKeys = function(o) {
+    $24c52f343453d62d$var$ownKeys = Object.getOwnPropertyNames || function(o) {
+        var ar = [];
+        for(var k in o)if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+        return ar;
+    };
+    return $24c52f343453d62d$var$ownKeys(o);
+};
 function $24c52f343453d62d$export$c21735bcef00d192(mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
     if (mod != null) {
-        for(var k in mod)if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) $24c52f343453d62d$export$45d3717a4c69092e(result, mod, k);
+        for(var k = $24c52f343453d62d$var$ownKeys(mod), i = 0; i < k.length; i++)if (k[i] !== "default") $24c52f343453d62d$export$45d3717a4c69092e(result, mod, k[i]);
     }
     $24c52f343453d62d$var$__setModuleDefault(result, mod);
     return result;
@@ -427,7 +439,7 @@ function $24c52f343453d62d$export$81fdc39f203e4e04(state, receiver) {
 function $24c52f343453d62d$export$88ac25d8e944e405(env, value, async) {
     if (value !== null && value !== void 0) {
         if (typeof value !== "object" && typeof value !== "function") throw new TypeError("Object expected.");
-        var dispose;
+        var dispose, inner;
         if (async) {
             if (!Symbol.asyncDispose) throw new TypeError("Symbol.asyncDispose is not defined.");
             dispose = value[Symbol.asyncDispose];
@@ -435,8 +447,16 @@ function $24c52f343453d62d$export$88ac25d8e944e405(env, value, async) {
         if (dispose === void 0) {
             if (!Symbol.dispose) throw new TypeError("Symbol.dispose is not defined.");
             dispose = value[Symbol.dispose];
+            if (async) inner = dispose;
         }
         if (typeof dispose !== "function") throw new TypeError("Object not disposable.");
+        if (inner) dispose = function() {
+            try {
+                inner.call(this);
+            } catch (e) {
+                return Promise.reject(e);
+            }
+        };
         env.stack.push({
             value: value,
             dispose: dispose,
@@ -456,22 +476,30 @@ function $24c52f343453d62d$export$8f076105dc360e92(env) {
         env.error = env.hasError ? new $24c52f343453d62d$var$_SuppressedError(e, env.error, "An error was suppressed during disposal.") : e;
         env.hasError = true;
     }
+    var r, s = 0;
     function next() {
-        while(env.stack.length){
-            var rec = env.stack.pop();
-            try {
-                var result = rec.dispose && rec.dispose.call(rec.value);
-                if (rec.async) return Promise.resolve(result).then(next, function(e) {
+        while(r = env.stack.pop())try {
+            if (!r.async && s === 1) return s = 0, env.stack.push(r), Promise.resolve().then(next);
+            if (r.dispose) {
+                var result = r.dispose.call(r.value);
+                if (r.async) return s |= 2, Promise.resolve(result).then(next, function(e) {
                     fail(e);
                     return next();
                 });
-            } catch (e) {
-                fail(e);
-            }
+            } else s |= 1;
+        } catch (e) {
+            fail(e);
         }
+        if (s === 1) return env.hasError ? Promise.reject(env.error) : Promise.resolve();
         if (env.hasError) throw env.error;
     }
     return next();
+}
+function $24c52f343453d62d$export$889dfb5d17574b0b(path, preserveJsx) {
+    if (typeof path === "string" && /^\.\.?\//.test(path)) return path.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function(m, tsx, d, ext, cm) {
+        return tsx ? preserveJsx ? ".jsx" : ".js" : d && (!ext || !cm) ? m : d + ext + "." + cm.toLowerCase() + "js";
+    });
+    return path;
 }
 var $24c52f343453d62d$export$2e2bcd8739ae039 = {
     __extends: $24c52f343453d62d$export$a8ba968b8961cb8a,
@@ -479,6 +507,10 @@ var $24c52f343453d62d$export$2e2bcd8739ae039 = {
     __rest: $24c52f343453d62d$export$3c9a16f847548506,
     __decorate: $24c52f343453d62d$export$29e00dfd3077644b,
     __param: $24c52f343453d62d$export$d5ad3fd78186038f,
+    __esDecorate: $24c52f343453d62d$export$3a84e1ae4e97e9b0,
+    __runInitializers: $24c52f343453d62d$export$d831c04e792af3d,
+    __propKey: $24c52f343453d62d$export$6a2a36740a146cb8,
+    __setFunctionName: $24c52f343453d62d$export$d1a06452d3489bc7,
     __metadata: $24c52f343453d62d$export$f1db080c865becb9,
     __awaiter: $24c52f343453d62d$export$1050f835b63b671e,
     __generator: $24c52f343453d62d$export$67ebef60e6f28a6,
@@ -500,7 +532,8 @@ var $24c52f343453d62d$export$2e2bcd8739ae039 = {
     __classPrivateFieldSet: $24c52f343453d62d$export$d40a35129aaff81f,
     __classPrivateFieldIn: $24c52f343453d62d$export$81fdc39f203e4e04,
     __addDisposableResource: $24c52f343453d62d$export$88ac25d8e944e405,
-    __disposeResources: $24c52f343453d62d$export$8f076105dc360e92
+    __disposeResources: $24c52f343453d62d$export$8f076105dc360e92,
+    __rewriteRelativeImportExtension: $24c52f343453d62d$export$889dfb5d17574b0b
 };
 
 
@@ -785,7 +818,7 @@ $19fe8e3abedf4df0$export$c7c07a37856565d[$19fe8e3abedf4df0$var$d] = !0, $19fe8e3
  */ var $f58f44579a4747ac$var$t;
 const $f58f44579a4747ac$var$i = window, $f58f44579a4747ac$var$s = $f58f44579a4747ac$var$i.trustedTypes, $f58f44579a4747ac$var$e = $f58f44579a4747ac$var$s ? $f58f44579a4747ac$var$s.createPolicy("lit-html", {
     createHTML: (t)=>t
-}) : void 0, $f58f44579a4747ac$var$o = "$lit$", $f58f44579a4747ac$var$n = `lit$${(Math.random() + "").slice(9)}$`, $f58f44579a4747ac$var$l = "?" + $f58f44579a4747ac$var$n, $f58f44579a4747ac$var$h = `<${$f58f44579a4747ac$var$l}>`, $f58f44579a4747ac$var$r = document, $f58f44579a4747ac$var$u = ()=>$f58f44579a4747ac$var$r.createComment(""), $f58f44579a4747ac$var$d = (t)=>null === t || "object" != typeof t && "function" != typeof t, $f58f44579a4747ac$var$c = Array.isArray, $f58f44579a4747ac$var$v = (t)=>$f58f44579a4747ac$var$c(t) || "function" == typeof (null == t ? void 0 : t[Symbol.iterator]), $f58f44579a4747ac$var$a = "[ 	\n\f\r]", $f58f44579a4747ac$var$f = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, $f58f44579a4747ac$var$_ = /-->/g, $f58f44579a4747ac$var$m = />/g, $f58f44579a4747ac$var$p = RegExp(`>|${$f58f44579a4747ac$var$a}(?:([^\\s"'>=/]+)(${$f58f44579a4747ac$var$a}*=${$f58f44579a4747ac$var$a}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`, "g"), $f58f44579a4747ac$var$g = /'/g, $f58f44579a4747ac$var$$ = /"/g, $f58f44579a4747ac$var$y = /^(?:script|style|textarea|title)$/i, $f58f44579a4747ac$var$w = (t)=>(i, ...s)=>({
+}) : void 0, $f58f44579a4747ac$var$o = "$lit$", $f58f44579a4747ac$var$n = `lit$${(Math.random() + "").slice(9)}$`, $f58f44579a4747ac$var$l = "?" + $f58f44579a4747ac$var$n, $f58f44579a4747ac$var$h = `<${$f58f44579a4747ac$var$l}>`, $f58f44579a4747ac$var$r = document, $f58f44579a4747ac$var$u = ()=>$f58f44579a4747ac$var$r.createComment(""), $f58f44579a4747ac$var$d = (t)=>null === t || "object" != typeof t && "function" != typeof t, $f58f44579a4747ac$var$c = Array.isArray, $f58f44579a4747ac$var$v = (t)=>$f58f44579a4747ac$var$c(t) || "function" == typeof (null == t ? void 0 : t[Symbol.iterator]), $f58f44579a4747ac$var$a = "[ \t\n\f\r]", $f58f44579a4747ac$var$f = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, $f58f44579a4747ac$var$_ = /-->/g, $f58f44579a4747ac$var$m = />/g, $f58f44579a4747ac$var$p = RegExp(`>|${$f58f44579a4747ac$var$a}(?:([^\\s"'>=/]+)(${$f58f44579a4747ac$var$a}*=${$f58f44579a4747ac$var$a}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`, "g"), $f58f44579a4747ac$var$g = /'/g, $f58f44579a4747ac$var$$ = /"/g, $f58f44579a4747ac$var$y = /^(?:script|style|textarea|title)$/i, $f58f44579a4747ac$var$w = (t)=>(i, ...s)=>({
             _$litType$: t,
             strings: i,
             values: s
@@ -1184,7 +1217,7 @@ class $a399cc6bbb0eb26a$export$da0658243c468832 extends (0, $ab210b2da7b39b9d$ex
     }
     _callAction(e) {
         const action = e.detail;
-        if (action.action === "call-service") this._hass.callService(action.service.split(".")[0], action.service.split(".")[1], {
+        if (action.action === "call-service") this._hass.callService(action.service.split('.')[0], action.service.split('.')[1], {
             entity_id: action.target.entity_id
         });
     }
@@ -1324,8 +1357,10 @@ const $120c5a859c012378$export$1601f807332f51bf = (0, $def2de46b9306e8a$export$d
     bottom: 0;
     background-color: var(--slider-track-color);
     transition: background-color 500ms;
-    opacity: 0.38;
+    opacity: 1;
     border-radius: 30px;
+    height: 50px;
+    width: 370px;
   }
 
   .slide-confirm-text{
@@ -1340,10 +1375,10 @@ const $120c5a859c012378$export$1601f807332f51bf = (0, $def2de46b9306e8a$export$d
   }
   .slide-confirm-handle{
     position:relative;
-    top:0;
-    left:0;
-    width:50px;
-    height:50px;
+    top:6px;
+    left:6px;
+    width:38px;
+    height:38px;
     border-radius:25px;
     border: 1px solid var(--switch-unchecked-button-color);
     background-color: var(--switch-unchecked-button-color);
@@ -1454,7 +1489,9 @@ class $3fffcf1c09fcf223$export$eb0022d780a83cd2 extends (0, $ab210b2da7b39b9d$ex
     render() {
         let content;
         content = (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
-			${this.config.label ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<span class="slide-label">${this.config.label}</span>` : ""}
+			${this.config.icon ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<ha-icon icon="${this.config.icon}" />` : ''}
+			${this.config.name ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<span class="slide-name">${this.config.name}</span>` : ''}
+			${this.config.label ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<span class="slide-label">${this.config.label}</span>` : ''}
 			<div class="slide-confirm">
 				<div class="slide-confirm-track"></div>
 				<div class="slide-confirm-text unconfirmed">${this.config.textUnconfirmed}</div>
@@ -1476,8 +1513,7 @@ class $3fffcf1c09fcf223$export$eb0022d780a83cd2 extends (0, $ab210b2da7b39b9d$ex
         return content;
     }
     constructor(...args){
-        super(...args);
-        this._confirmed = false;
+        super(...args), this._confirmed = false;
     }
 }
 (0, $24c52f343453d62d$export$29e00dfd3077644b)([

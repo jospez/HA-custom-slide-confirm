@@ -1454,7 +1454,7 @@ class $3fffcf1c09fcf223$export$eb0022d780a83cd2 extends (0, $ab210b2da7b39b9d$ex
     }
     dragEnd(e) {
         let x = this._calculateX(e);
-        if (x + e.target.clientWidth === this._container.clientWidth && !this._confirmed) {
+        if (x + e.target.clientWidth === this._container.clientWidth - 15 && !this._confirmed) {
             this._confirmed = true;
             this._container.classList.add("confirmed");
             if (this.config.confirm_action) {

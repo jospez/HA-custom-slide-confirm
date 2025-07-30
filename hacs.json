@@ -1,7 +1,7 @@
 {
 	"name": "Slide to Confirm (custom)",
 	"render_readme": true,
-	"filename": "slide-confirm.js",
+	"filename": "slide-confirm-custom.js",
 	"content_in_root": false,
 	"description": "Forked version of Slide Confirm Card with ::part(handle) support.",
   	"type": "module"

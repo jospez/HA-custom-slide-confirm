@@ -4,7 +4,7 @@
 	"description": "Custom card for Home Assistant to prevent accidental button presses.",
 	"author": "Custom",
 	"source": "src/index.ts",
-	"module": "dist/slide-confirm.js",
+	"module": "dist/slide-confirm-custom.js",
 	"targets": {
 		"module": {
 			"includeNodeModules": true

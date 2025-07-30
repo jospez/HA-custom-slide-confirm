@@ -79,7 +79,7 @@ export class SlideConfirmButton extends LitElement {
 		if (x < 0) {
 			x = 0;
 		} else if (x + e.target.clientWidth >= this._container.clientWidth) {
-			x = this._container.clientWidth - e.target.clientWidth;
+			x = this._container.clientWidth - e.target.clientWidth - 15;
 		}
 
 		return x;

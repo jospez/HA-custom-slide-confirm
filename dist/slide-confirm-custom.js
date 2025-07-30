@@ -1480,7 +1480,7 @@ class $3fffcf1c09fcf223$export$eb0022d780a83cd2 extends (0, $ab210b2da7b39b9d$ex
         let x = e.clientX - bounds.x - e.target.clientWidth / 2;
         // Keep the handle within the container
         if (x < 0) x = 0;
-        else if (x + e.target.clientWidth >= this._container.clientWidth) x = this._container.clientWidth - e.target.clientWidth;
+        else if (x + e.target.clientWidth >= this._container.clientWidth) x = this._container.clientWidth - e.target.clientWidth - 15;
         return x;
     }
     drag(e) {

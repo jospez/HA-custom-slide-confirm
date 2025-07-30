@@ -93,8 +93,6 @@ export class SlideConfirmButton extends LitElement {
 		let content: TemplateResult;
 
 		content = html`
-			${this.config.icon ? html`<ha-icon icon="${this.config.icon}" />` : ''}
-			${this.config.name ? html`<span class="slide-name">${this.config.name}</span>` : ''}
 			${this.config.label ? html`<span class="slide-label">${this.config.label}</span>` : ''}
 			<div class="slide-confirm">
 				<div class="slide-confirm-track"></div>

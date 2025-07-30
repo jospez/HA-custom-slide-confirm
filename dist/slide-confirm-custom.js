@@ -1360,7 +1360,7 @@ const $120c5a859c012378$export$1601f807332f51bf = (0, $def2de46b9306e8a$export$d
     opacity: 1;
     border-radius: 30px;
     height: 50px;
-    width: 370px;
+    #width: 370px;
   }
 
   .slide-confirm-text{
@@ -1489,8 +1489,6 @@ class $3fffcf1c09fcf223$export$eb0022d780a83cd2 extends (0, $ab210b2da7b39b9d$ex
     render() {
         let content;
         content = (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
-			${this.config.icon ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<ha-icon icon="${this.config.icon}" />` : ''}
-			${this.config.name ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<span class="slide-name">${this.config.name}</span>` : ''}
 			${this.config.label ? (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`<span class="slide-label">${this.config.label}</span>` : ''}
 			<div class="slide-confirm">
 				<div class="slide-confirm-track"></div>

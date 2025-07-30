@@ -24,7 +24,7 @@ export const slideConfirmStyles = css`
     opacity: 1;
     border-radius: 30px;
     height: 50px;
-    width: 370px;
+    #width: 370px;
   }
 
   .slide-confirm-text{

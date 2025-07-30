@@ -1346,7 +1346,8 @@ const $120c5a859c012378$export$1601f807332f51bf = (0, $def2de46b9306e8a$export$d
     user-select:none;
     -moz-user-select:none;
     -webkit-user-select:none;
-    margin: 8px 0;
+    margin: 0px 0;
+    bottom: 5px;
   }
   
   .slide-confirm-track {
@@ -1366,13 +1367,16 @@ const $120c5a859c012378$export$1601f807332f51bf = (0, $def2de46b9306e8a$export$d
   .slide-confirm-text{
     display: inline-block;
     position: absolute;
-    left: 0;
+    left: 60px;
     width: 100%;
     top: 50%;
-    text-align: center;
+    text-align: left;
     transform: translateY(-50%);
     font-size: 1rem;
+    bottom: 10px;
+    font-weight: 500;
   }
+
   .slide-confirm-handle{
     position:relative;
     top:6px;
